@@ -4,13 +4,9 @@ import com.youcode.rentalhive.dao.model.User;
 import com.youcode.rentalhive.dao.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -23,35 +19,54 @@ public class UserController {
     }
 
     @GetMapping("/api/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.selectById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(userService.findByIdOrThrow(Long.valueOf(id)));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().header("Message", "Invalid user Id format").build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().header("Message", e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        }
+    }
+
+    @PostMapping("/api/users")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.insert(user).orElse(null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        }
+    }
+
+    @PutMapping("/api/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.update(user, Long.valueOf(id)).orElse(null));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().header("Message", "Invalid user Id format").build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().header("Message", e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        }
     }
 
 
-
-
-
-    /*
-    @PostMapping
-    public ResponseEntity<CategoryDto> createCategory( @RequestBody CategoryDto categoryDto) {
-        CategoryDto createdCategory = categoryService.saveCategory(categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    @DeleteMapping("/api/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        try {
+            userService.deleteById(Long.valueOf(id));
+            return ResponseEntity.noContent().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().header("Message", "Invalid user Id format").build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().header("Message", e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        }
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable long id, @RequestBody CategoryDto categoryDto) {
-        CategoryDto updatedCategory = categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.ok(updatedCategory);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
-    }
-     */
 
 
 
