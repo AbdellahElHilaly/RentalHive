@@ -22,4 +22,9 @@ public class User {
     private String email;
     private String password;
 
+    @Column(nullable = false)
+    private Boolean isAuthenticated = false;
+    @Column(nullable = false)
+    private String role = "USER";
+
 }

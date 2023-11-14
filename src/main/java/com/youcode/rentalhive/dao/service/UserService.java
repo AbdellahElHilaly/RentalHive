@@ -12,9 +12,11 @@ public interface UserService {
     public Optional<User> insert(User user);
     public Optional<User> update(User user, Long id);
     public void deleteById(Long id);
+    void login(String email, String password);
+    void logout(String email);
+
     public User findByIdOrThrow(Long id);
-
-
+    public User findByEmailOrThrow(String email);
 
 }
 
