@@ -17,4 +17,17 @@ public class Reservation {
 
     private Long id;
 
+    // many reservations can be made by one user
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // many reservations can be made for one equipment
+    @ManyToOne
+    @JoinColumn(name = "equipment_id")
+    private Equipment equipment;
+
+    private String startDate;
+    private String endDate;
+
 }
