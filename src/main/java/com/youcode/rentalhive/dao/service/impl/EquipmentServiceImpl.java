@@ -18,6 +18,12 @@ public class EquipmentServiceImpl implements EquipmentService {
         return EquipmentRepository.findAll();
     }
 
+    @Override
+    public Equipment addEquipment(Equipment equipment){
+            EquipmentRepository.save(equipment);
+            return equipment;
+    }
+
 
 
 }
