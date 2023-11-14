@@ -9,6 +9,9 @@
     <include file="db/changelog/migrations/abdellah/create_users_table.xml"/>
 
 
+    <include file="db/changelog/migrations/hamza/create_equipments_table.xml"/>
+
+
 
 
 
