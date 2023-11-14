@@ -14,7 +14,6 @@ public class app {
                 .email("abdellah@gmail.com")
                 .password("123456")
                 .build();
-
         System.out.println(abdellah);
     }
 }
