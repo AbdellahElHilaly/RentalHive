@@ -22,17 +22,20 @@ public class UserController {
         return ResponseEntity.ok(userService.selectAll());
     }
 
-    @GetMapping("api/users/{id}")
+    @GetMapping("/api/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        if(userService.selectById(id).isPresent()) {
-            return ResponseEntity.ok(userService.selectById(id).get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userService.selectById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> abdellah
     /*
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory( @RequestBody CategoryDto categoryDto) {
