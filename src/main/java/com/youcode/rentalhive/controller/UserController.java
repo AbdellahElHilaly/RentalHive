@@ -2,7 +2,9 @@ package com.youcode.rentalhive.controller;
 
 import com.youcode.rentalhive.dao.model.User;
 import com.youcode.rentalhive.dao.service.UserService;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,12 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             return ResponseEntity.ok(userService.insert(user).orElse(null));
+        }  catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().header("Message", "Email already exists").build();
+        } catch (ConstraintViolationException e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
         } catch (Exception e) {
+            // Handle other exceptions
             return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
         }
     }
