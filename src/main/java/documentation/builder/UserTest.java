@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @Setter
 @Getter
-@Data // ==  setter +  getter
+@Data
 public class UserTest {
     private  Long id;
     private String firstName;
