@@ -9,6 +9,6 @@ import java.util.List;
 public interface EquipmentService {
       List<Equipment> selectAll();
 
-      void addEquipment();
+      Equipment addEquipment(Equipment equipment);
 }
 
