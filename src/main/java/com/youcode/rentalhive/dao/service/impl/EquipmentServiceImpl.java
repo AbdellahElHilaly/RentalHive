@@ -19,11 +19,45 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Equipment addEquipment(Equipment equipment){
-            EquipmentRepository.save(equipment);
+    public Equipment selectById(Long id ){
+        try{
+            Equipment equipment =  EquipmentRepository.findById(id).get();
             return equipment;
+
+        }catch(Exception e){
+            return null;
+        }
+
     }
 
+
+
+    @Override
+    public Equipment addEquipment(Equipment equipment){
+            try{
+                EquipmentRepository.save(equipment);
+                //TODO : get the
+                return equipment;
+            }catch(Exception e){
+                System.out.println(e);
+                return null;
+            }
+
+    }
+
+    @Override
+    public Equipment deleteEquipment(Equipment equipment){
+        //TODO : write the delete implementation using deleteById()
+
+        return equipment;
+    }
+
+
+    @Override
+    public Equipment updateEquipment(Equipment equipment){
+        //TODO : write the update implementation
+        return equipment;
+    }
 
 
 }
