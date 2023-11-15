@@ -10,7 +10,7 @@ public interface UserService {
     public List<User> selectAll();
     public Optional<User> selectById(Long id);
     public Optional<User> insert(User user);
-    public Optional<User> update(User user);
+    public Optional<User> update(User user, Long id);
     public void deleteById(Long id);
     public User findByIdOrThrow(Long id);
 

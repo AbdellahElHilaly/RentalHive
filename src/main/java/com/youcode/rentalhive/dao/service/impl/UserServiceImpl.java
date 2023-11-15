@@ -4,6 +4,7 @@ import com.youcode.rentalhive.dao.model.User;
 import com.youcode.rentalhive.dao.repository.UserRepository;
 import com.youcode.rentalhive.dao.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,23 +33,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> update(User user) {
-        findByIdOrThrow(user.getId());
-        return Optional.of(userRepository.save(findByIdOrThrow(user.getId())));
+    public Optional<User> update(User user , Long id) {
+        user.setId(findByIdOrThrow(id).getId());
+        return Optional.of(userRepository.save(user));
     }
 
     @Override
     public void deleteById(Long id) {
         userRepository.delete(findByIdOrThrow(id));
-
     }
+
+
 
     @Override
     public User findByIdOrThrow(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> {
-                    new IllegalArgumentException("Invalid user Id:" + id);
-                    return null;
+                    return new  IllegalArgumentException("Invalid user Id:" + id);
                 }
         );
     }
