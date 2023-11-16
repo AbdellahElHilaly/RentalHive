@@ -10,4 +10,5 @@ public class HomeController {
     public String welcome() {
         return "<h1>Welcome to the Rental Hive API! created by YouCode students.</h1>";
     }
+
 }

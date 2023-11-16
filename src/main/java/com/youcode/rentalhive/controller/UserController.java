@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -70,6 +71,32 @@ public class UserController {
             return ResponseEntity.badRequest().header("Message", "Invalid user Id format").build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().header("Message", e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        }
+    }
+
+
+    @PostMapping("/api/users/login")
+    public ResponseEntity<Void> login(@RequestBody User user) {
+        try {
+            userService.login(user.getEmail(), user.getPassword());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
+        }
+    }
+
+
+    @PostMapping("/api/users/logout")
+    public ResponseEntity<Void> logout(@RequestBody User user) {
+        try {
+            userService.logout(user.getEmail());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().header("Message", e.getMessage()).build();
         }
