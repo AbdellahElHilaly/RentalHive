@@ -2,12 +2,11 @@ package com.youcode.rentalhive.controller;
 
 import com.youcode.rentalhive.dao.model.Equipment;
 import com.youcode.rentalhive.dao.service.EquipmentService;
+import com.youcode.rentalhive.dao.service.impl.EquipmentServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,14 +29,21 @@ public class EquipmentController {
 
     }
 
-    @PostMapping("/addEquipment")
-    public ResponseEntity<Equipment> add(){
-        try{
+    //getting a user  by id
 
+    @GetMapping("/equipments/{id}")
+    public ResponseEntity<Equipment> getEquipment(@PathVariable("id") Long id){
+        return ResponseEntity.ok(equipmentService.selectById(id));
+    }
+
+    @PostMapping("/addEquipment")
+    public ResponseEntity<Equipment> add(@RequestParam String equipment_name , @RequestParam int Quantity){
+        try{
+//TODO : get the data from a form with http request
             Equipment equipment = Equipment.builder()
-                    .name("trax")
-                    .id(1L)
-                    .Quantity(44)
+                    .name(equipment_name)
+//                    .id(1L)
+                    .Quantity(Quantity)
                     .build();
 
             Equipment savedEquipment = equipmentService.addEquipment(equipment);
@@ -53,16 +59,18 @@ public class EquipmentController {
 
 
 
-//        Widget testWidget = Widget.builder()
-//                .name("foo")
-//                .id(1)
-//                .build();
-
-
-
-
     }
 
+    @PutMapping("updateEquipment/{id}")
+    public ResponseEntity<Equipment> updateEquipment(
+            @PathVariable Long id,
+            @RequestBody Equipment updatedEquipmentData) {
+
+        Optional<Equipment> updatedEquipment = equipmentService.updateEquipment(id, updatedEquipmentData);
+
+        return updatedEquipment.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 
 
