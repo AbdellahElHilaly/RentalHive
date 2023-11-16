@@ -2,6 +2,7 @@ package com.youcode.rentalhive.controller;
 
 import com.youcode.rentalhive.dao.model.Equipment;
 import com.youcode.rentalhive.dao.service.EquipmentService;
+import com.youcode.rentalhive.dao.service.impl.EquipmentServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +61,16 @@ public class EquipmentController {
 
     }
 
+    @PutMapping("updateEquipment/{id}")
+    public ResponseEntity<Equipment> updateEquipment(
+            @PathVariable Long id,
+            @RequestBody Equipment updatedEquipmentData) {
+
+        Optional<Equipment> updatedEquipment = equipmentService.updateEquipment(id, updatedEquipmentData);
+
+        return updatedEquipment.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 
 

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -52,11 +53,34 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipment;
     }
 
+//    @Override
+//    public Optional<Equipment> updateEquipment(Long id) {
+//        return Optional.empty();
+//    }
+
 
     @Override
-    public Equipment updateEquipment(Equipment equipment){
+    public Optional<Equipment> updateEquipment(Long id, Equipment updatedEquipment){
         //TODO : write the update implementation
-        return equipment;
+        Optional<Equipment> optionalEntity = EquipmentRepository.findById(id);
+
+        if (optionalEntity.isPresent()) {
+            Equipment existingEntity = optionalEntity.get();
+
+            // Update the fields of the existing entity with the new data
+
+            existingEntity.setName(updatedEquipment.getName());
+            existingEntity.setQuantity(updatedEquipment.getQuantity());
+
+            // ... Set other fields accordingly
+
+            // Save the updated entity back to the database
+            Equipment savedEntity = EquipmentRepository.save(existingEntity);
+            return Optional.of(savedEntity);
+        } else {
+            // Handle the case where the entity with the given ID is not found
+            return Optional.empty();
+        }
     }
 
 
