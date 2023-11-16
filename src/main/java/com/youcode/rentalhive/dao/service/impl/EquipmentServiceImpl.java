@@ -47,17 +47,19 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public Equipment deleteEquipment(Equipment equipment){
+    public String deleteEquipment(Long id){
         //TODO : write the delete implementation using deleteById()
+//        Long equipmentId = equipment.getId(); // Assuming 'getId()' returns the ID
 
+        if (id != null) {
+            // Use the equipment repository to delete by ID
+            EquipmentRepository.deleteById(id);
+        }
 
-        return equipment;
+        return "equipment";
     }
 
-//    @Override
-//    public Optional<Equipment> updateEquipment(Long id) {
-//        return Optional.empty();
-//    }
+
 
 
     @Override
@@ -69,22 +71,25 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (optionalEntity.isPresent()) {
             Equipment existingEntity = optionalEntity.get();
 
-//            if(updatedEquipment.getName() != null){
+            if(updatedEquipment.getName() != null){
                 existingEntity.setName(updatedEquipment.getName());
 
-//            } else if (updatedEquipment.getQuantity() != 0) {
+            } else if (toInteger(updatedEquipment.getQuantity()) != null) {
                 existingEntity.setQuantity(updatedEquipment.getQuantity());
 
-//            }
-
-
-
+            }
             Equipment savedEntity = EquipmentRepository.save(existingEntity);
             return Optional.of(savedEntity);
         } else {
-            // Handle the case where the entity with the given ID is not found
+            // handle the case where the entity with the given ID is not found
             return Optional.empty();
         }
+    }
+
+//i used this so i can compare int with null using != operator
+    public Integer toInteger(int value){
+        Integer convert = value;
+        return convert;
     }
 
 

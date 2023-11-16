@@ -5,6 +5,7 @@ import com.youcode.rentalhive.dao.service.EquipmentService;
 import com.youcode.rentalhive.dao.service.impl.EquipmentServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class EquipmentController {
 
     //getting a user  by id
 
-    @GetMapping("/equipments/{id}")
+    @GetMapping("/d/{id}")
     public ResponseEntity<Equipment> getEquipment(@PathVariable("id") Long id){
         return ResponseEntity.ok(equipmentService.selectById(id));
     }
@@ -72,6 +73,17 @@ public class EquipmentController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
+    @DeleteMapping("deleteEquipment/{id}")
+    public ResponseEntity<String> deleteEquipment(@PathVariable Long id) {
+        try {
+            equipmentService.deleteEquipment(id);
+            return ResponseEntity.ok("Equipment with ID " + id + " deleted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete equipment with ID " + id + ": " + e.getMessage());
+        }
+    }
 
 
 }

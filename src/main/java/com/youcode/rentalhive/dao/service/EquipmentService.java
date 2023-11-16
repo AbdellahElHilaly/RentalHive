@@ -13,7 +13,7 @@ public interface EquipmentService {
       Equipment selectById(Long id);
       Equipment addEquipment(Equipment equipment);
 
-      Equipment deleteEquipment(Equipment equipment);
+      String deleteEquipment(Long id);
 //      Optional<Equipment> updateEquipment(Long  id);
 
       Optional<Equipment> updateEquipment(Long id, Equipment updatedEquipment);
