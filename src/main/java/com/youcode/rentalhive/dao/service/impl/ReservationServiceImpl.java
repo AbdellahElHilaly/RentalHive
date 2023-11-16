@@ -32,7 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Optional<Reservation> update(Reservation reservation) {
+    public Optional<Reservation> update(Reservation reservation , Long id) {
         return Optional.of(reservationRepository.save(findByIdOrThrow(reservation.getId())));
     }
 
