@@ -50,6 +50,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     public Equipment deleteEquipment(Equipment equipment){
         //TODO : write the delete implementation using deleteById()
 
+
         return equipment;
     }
 
@@ -62,19 +63,22 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public Optional<Equipment> updateEquipment(Long id, Equipment updatedEquipment){
         //TODO : write the update implementation
+
         Optional<Equipment> optionalEntity = EquipmentRepository.findById(id);
 
         if (optionalEntity.isPresent()) {
             Equipment existingEntity = optionalEntity.get();
 
-            // Update the fields of the existing entity with the new data
+//            if(updatedEquipment.getName() != null){
+                existingEntity.setName(updatedEquipment.getName());
 
-            existingEntity.setName(updatedEquipment.getName());
-            existingEntity.setQuantity(updatedEquipment.getQuantity());
+//            } else if (updatedEquipment.getQuantity() != 0) {
+                existingEntity.setQuantity(updatedEquipment.getQuantity());
 
-            // ... Set other fields accordingly
+//            }
 
-            // Save the updated entity back to the database
+
+
             Equipment savedEntity = EquipmentRepository.save(existingEntity);
             return Optional.of(savedEntity);
         } else {
