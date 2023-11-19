@@ -52,7 +52,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 //        Long equipmentId = equipment.getId(); // Assuming 'getId()' returns the ID
 
         if (id != null) {
-            // Use the equipment repository to delete by ID
+            // using the equipment repository to delete by ID
             EquipmentRepository.deleteById(id);
         }
 
@@ -67,7 +67,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         //TODO : write the update implementation
 
         Optional<Equipment> optionalEntity = EquipmentRepository.findById(id);
-
+//        optionalEntity is the Equipment entity
         if (optionalEntity.isPresent()) {
             Equipment existingEntity = optionalEntity.get();
 

@@ -57,9 +57,6 @@ public class EquipmentController {
         }
 
 
-
-
-
     }
 
     @PutMapping("updateEquipment/{id}")
