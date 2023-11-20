@@ -10,8 +10,6 @@ import java.util.Optional;
 public class Authentication {
 
 
-
-
     public Optional<User> authenticate(User user, String password) {
         if (user.getPassword().equals(password)) {
             user.setIsAuthenticated(true);

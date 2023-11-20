@@ -30,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> insert(User user) {
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         return Optional.of(userRepository.save(user));
     }
 
@@ -77,6 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByIdOrThrow(Long id) {
+        if(id == null || id < 0) throw new IllegalArgumentException("Invalid user Id : " + id);
         return userRepository.findById(id).orElseThrow(() -> {
             return new IllegalArgumentException("Invalid user Id : " + id);
         });
@@ -84,6 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmailOrThrow(String email) {
+        if(email == null || email.isEmpty()) throw new IllegalArgumentException("Invalid user email : " + email);
         return userRepository.findByEmail(email).orElseThrow(() -> {
             return new IllegalArgumentException("Invalid user email : " + email);
         });
