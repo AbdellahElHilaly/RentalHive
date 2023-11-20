@@ -14,11 +14,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="equipments")
 public class Equipment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int Quantity;
-
+    private String quantity;
 }
