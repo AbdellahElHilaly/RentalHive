@@ -10,5 +10,7 @@ public interface EquipmentService {
       List<Equipment> selectAll();
 
       Equipment addEquipment(Equipment equipment);
+
+      List<Equipment> searchedEquipments(String search);
 }
 
