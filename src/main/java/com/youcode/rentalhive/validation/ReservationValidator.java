@@ -2,43 +2,54 @@ package com.youcode.rentalhive.validation;
 
 import com.youcode.rentalhive.dao.model.Reservation;
 import com.youcode.rentalhive.helper.ValidationHelper;
+import jakarta.validation.ValidationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ReservationValidator {
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final ValidationHelper validationHelper = new ValidationHelper();
 
 
     public  void validate(Reservation reservation) throws IllegalArgumentException{
         validateStartDate(reservation.getStartDate());
         validateEndDate(reservation.getEndDate());
-        validateQuanity(String.valueOf(reservation.getEquipment().getQuantity()));
 
     }
 
-    private void validateQuanity(String quantity) {
-        if(!validationHelper.isNumber(quantity)){
-            throw new IllegalArgumentException("Quantity must be a number");
-        }
-        if( Integer.parseInt(quantity) <= 0){
-            throw new IllegalArgumentException("Quantity must be greater than 0");
-        }
-    }
 
-    private void validateEndDate(String endDate) {
-        if (endDate == null || endDate.isEmpty()) {
-            throw new IllegalArgumentException("End date is required");
-        }
-        if(validationHelper.isToday(endDate)){
-            throw new IllegalArgumentException("End date can't be today");
-        }
-    }
 
-    private void validateStartDate(String startDate) {
+    // ... other methods ...
+
+    private void validateStartDate(String startDate)  {
         if (startDate == null || startDate.isEmpty()) {
-            throw new IllegalArgumentException("Start date is required");
+            throw new ResponseStatusException(HttpStatus.LENGTH_REQUIRED, "End date is required");
+
         }
-        if(validationHelper.isToday(startDate)){
-            throw new IllegalArgumentException("Start date can't be today");
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate reservationStartDate = LocalDate.parse(startDate, DATE_FORMATTER);
+
+        if (!reservationStartDate.isEqual(currentDate)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date must be greater than today");
+
         }
     }
+    private void validateEndDate(String endDate) throws ValidationException {
+        if (endDate == null || endDate.isEmpty()) {
+            throw new ValidationException("End date is required");
+        }
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate reservationEndDate = LocalDate.parse(endDate, DATE_FORMATTER);
+
+        if (reservationEndDate.isBefore(currentDate)) {
+            throw new ValidationException("End date must be greater than the current date");
+        }
+    }
+
 }

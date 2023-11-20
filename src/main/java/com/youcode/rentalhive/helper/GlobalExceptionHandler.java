@@ -20,4 +20,6 @@ public class GlobalExceptionHandler {
 
     private record ErrorResponse(int statusCode, String message) {
     }
+
+
 }

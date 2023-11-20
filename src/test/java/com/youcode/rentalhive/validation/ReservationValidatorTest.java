@@ -61,6 +61,7 @@ class ReservationValidatorTest {
         assertThrows(IllegalArgumentException.class, () -> validator.validate(reservation));
     }
 
+    @Test
     private Reservation createValidReservation() {
         User user = new User(); // Create a user
         Equipment equipment = new Equipment(); // Create an equipment
@@ -68,8 +69,8 @@ class ReservationValidatorTest {
         Reservation reservation = new Reservation(); // Create a reservation
         reservation.setUser(user);
         reservation.setEquipment(equipment);
-        reservation.setStartDate("2023-11-16"); // Set a valid start date
-        reservation.setEndDate("2023-11-18"); // Set a valid end date
+        reservation.setStartDate("2023-11-20"); // Set a valid start date
+        reservation.setEndDate("2023-11-22"); // Set a valid end date
         return reservation;
     }
 }
