@@ -25,7 +25,6 @@ public class EquipmentController {
         List<Equipment> equipments = equipmentServiceImpl.searchedEquipments(search);
 
         if (equipments.isEmpty()) {
-            System.out.println("jksdjk");
             response.put("status", "error");
             response.put("message", "search is empty");
 
