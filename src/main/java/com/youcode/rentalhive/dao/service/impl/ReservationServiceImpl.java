@@ -3,6 +3,7 @@ package com.youcode.rentalhive.dao.service.impl;
 import com.youcode.rentalhive.dao.model.Equipment;
 import com.youcode.rentalhive.dao.model.Reservation;
 import com.youcode.rentalhive.dao.model.User;
+import com.youcode.rentalhive.dao.repository.EquipmentRepository;
 import com.youcode.rentalhive.dao.repository.ReservationRepository;
 import com.youcode.rentalhive.dao.service.EquipmentService;
 import com.youcode.rentalhive.dao.service.ReservationService;
@@ -25,6 +26,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final UserService userService;
 
+    private final EquipmentRepository equipmentRepository;
+
     @Override
     public List<Reservation> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
@@ -45,7 +48,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Optional<Reservation> insert(Reservation reservation) {
         // Check equipment availability before adding the reservation
-        Equipment equipment = checkEquipmentAvailability(reservation);
+        Equipment equipment = checkEquipmentAvailabilityAndDecrementQuantity(reservation);
 
         reservation.setEquipment(equipment);
 
@@ -60,11 +63,47 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Optional<Reservation> update(Reservation reservation, Long id) {
-        // Check equipment availability before updating the reservation
-        checkEquipmentAvailability(reservation);
+        // Check if the reservation exists
+        Reservation existingReservation = findByIdOrThrow(id);
 
-        return Optional.of(reservationRepository.save(findByIdOrThrow(reservation.getId())));
+        // Check user availability before Updating the reservation
+        User user = checkUserAvailability(reservation);
+
+        // Set the user to the reservation
+        reservation.setUser(user);
+
+        // Check if the equipment ID is different
+        if (!existingReservation.getEquipment().getId().equals(reservation.getEquipment().getId())) {
+
+            // Decrement the quantity of the existing equipment by 1
+            Equipment existingEquipment = existingReservation.getEquipment();
+            int existingQuantity = existingEquipment.getQuantity();
+
+            if (existingQuantity <= 0) {
+                // Handle the case where the quantity is already 0
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The Equipment quantity is already 0");
+            }
+
+            existingEquipment.setQuantity(existingQuantity - 1);
+            equipmentRepository.save(existingEquipment);
+
+            // Increment the quantity of the old equipment by 1
+            Equipment oldEquipment = equipmentRepository.findById(existingReservation.getEquipment().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Old Equipment not found"));
+
+            oldEquipment.setQuantity(oldEquipment.getQuantity() + 1);
+            equipmentRepository.save(oldEquipment);
+        }
+
+        // Set the equipment for the reservation
+        Equipment updatedEquipment = checkEquipmentAvailability(reservation);
+        reservation.setEquipment(updatedEquipment);
+
+        // Save the updated reservation
+        return Optional.of(reservationRepository.save(existingReservation));
     }
+
+
 
     @Override
     public void deleteById(Long id) {
@@ -78,7 +117,7 @@ public class ReservationServiceImpl implements ReservationService {
         );
     }
 
-    private Equipment checkEquipmentAvailability(Reservation reservation) {
+    private Equipment checkEquipmentAvailabilityAndDecrementQuantity(Reservation reservation) {
         Equipment equipment = reservation.getEquipment();
 
         // Assuming userService.selectById(id) returns the User with the given ID
@@ -93,6 +132,19 @@ public class ReservationServiceImpl implements ReservationService {
         } else {
             existingEquipment.get().setQuantity(existingEquipment.get().getQuantity() - 1);
         }
+        return existingEquipment.get();
+    }
+    private Equipment checkEquipmentAvailability(Reservation reservation) {
+        Equipment equipment = reservation.getEquipment();
+
+        // Assuming userService.selectById(id) returns the User with the given ID
+        Optional<Equipment> existingEquipment = Optional.ofNullable(equipmentService.selectById(equipment.getId()));
+
+        // Check if the user is available
+        if (existingEquipment == null || existingEquipment.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipment not available for reservation");
+        }
+
         return existingEquipment.get();
     }
 

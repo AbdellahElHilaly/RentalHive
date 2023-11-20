@@ -1,19 +1,23 @@
 package com.youcode.rentalhive.validation;
 
+import com.youcode.rentalhive.dao.model.Equipment;
 import com.youcode.rentalhive.dao.model.Reservation;
+import com.youcode.rentalhive.dao.model.User;
+import com.youcode.rentalhive.dao.service.UserService;
 import com.youcode.rentalhive.helper.ValidationHelper;
 import jakarta.validation.ValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 public class ReservationValidator {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final ValidationHelper validationHelper = new ValidationHelper();
 
     public void validate(Reservation reservation) throws IllegalArgumentException {
         validateStartDate(reservation.getStartDate());
@@ -62,4 +66,6 @@ public class ReservationValidator {
     private void validateDateFormat(String date) throws DateTimeParseException {
         LocalDate.parse(date, DATE_FORMATTER);
     }
+
+
 }
