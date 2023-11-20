@@ -8,48 +8,58 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class ReservationValidator {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final ValidationHelper validationHelper = new ValidationHelper();
 
-
-    public  void validate(Reservation reservation) throws IllegalArgumentException{
+    public void validate(Reservation reservation) throws IllegalArgumentException {
         validateStartDate(reservation.getStartDate());
         validateEndDate(reservation.getEndDate());
-
     }
 
 
-
-    // ... other methods ...
-
-    private void validateStartDate(String startDate)  {
+    private void validateStartDate(String startDate) {
         if (startDate == null || startDate.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.LENGTH_REQUIRED, "End date is required");
-
+            throw new ResponseStatusException(HttpStatus.LENGTH_REQUIRED, "Start date is required");
         }
 
-        LocalDate currentDate = LocalDate.now();
-        LocalDate reservationStartDate = LocalDate.parse(startDate, DATE_FORMATTER);
+        try {
+            validateDateFormat(startDate);
 
-        if (!reservationStartDate.isEqual(currentDate)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date must be greater than today");
+            LocalDate currentDate = LocalDate.now();
+            LocalDate reservationStartDate = LocalDate.parse(startDate, DATE_FORMATTER);
 
+            if (!reservationStartDate.isEqual(currentDate)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date must be today");
+            }
+        } catch (DateTimeParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid start date: " + e.getMessage());
         }
     }
+
     private void validateEndDate(String endDate) throws ValidationException {
         if (endDate == null || endDate.isEmpty()) {
             throw new ValidationException("End date is required");
         }
 
-        LocalDate currentDate = LocalDate.now();
-        LocalDate reservationEndDate = LocalDate.parse(endDate, DATE_FORMATTER);
+        try {
+            validateDateFormat(endDate);
 
-        if (reservationEndDate.isBefore(currentDate)) {
-            throw new ValidationException("End date must be greater than the current date");
+            LocalDate currentDate = LocalDate.now();
+            LocalDate reservationEndDate = LocalDate.parse(endDate, DATE_FORMATTER);
+
+            if (reservationEndDate.isBefore(currentDate)) {
+                throw new ValidationException("End date must be greater than the current date");
+            }
+        } catch (DateTimeParseException | ValidationException e) {
+            throw new ValidationException("Invalid end date: " + e.getMessage());
         }
     }
 
+    private void validateDateFormat(String date) throws DateTimeParseException {
+        LocalDate.parse(date, DATE_FORMATTER);
+    }
 }
