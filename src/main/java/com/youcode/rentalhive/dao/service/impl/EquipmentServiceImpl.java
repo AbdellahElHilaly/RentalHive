@@ -4,15 +4,16 @@ import com.youcode.rentalhive.dao.model.Equipment;
 import com.youcode.rentalhive.dao.repository.EquipmentRepository;
 import com.youcode.rentalhive.dao.service.EquipmentService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class EquipmentServiceImpl implements EquipmentService {
 
-    private final EquipmentRepository EquipmentRepository;
+    @Autowired
+    private  EquipmentRepository EquipmentRepository;
     @Override
     public List<Equipment> selectAll() {
         return EquipmentRepository.findAll();
@@ -24,6 +25,9 @@ public class EquipmentServiceImpl implements EquipmentService {
             return equipment;
     }
 
-
+    @Override
+    public List<Equipment> searchedEquipments(String search) {
+        return EquipmentRepository.getsearchedEquipments(search, search);
+    }
 
 }
