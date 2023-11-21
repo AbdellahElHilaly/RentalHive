@@ -36,37 +36,37 @@ public class EquipmentController {
         return ResponseEntity.ok(response);
     }
 
-//    @Autowired
-//     public EquipmentController(EquipmentService equipmentService) {
-//         this.equipmentService = equipmentService;
-//     }
+   @Autowired
+    public EquipmentController(EquipmentService equipmentService) {
+        this.equipmentService = equipmentService;
+    }
 
 
-//     @GetMapping("/equipments")
-//     public ResponseEntity<List<Equipment>> getAllEquipments() {
-//         return ResponseEntity.ok(equipmentService.selectAll());
-//     }
+    @GetMapping("/equipments")
+    public ResponseEntity<List<Equipment>> getAllEquipments() {
+        return ResponseEntity.ok(equipmentService.selectAll());
+    }
 
-//     @PostMapping("/addEquipment")
-//     public ResponseEntity<Equipment> add() {
-//      try {
-//          Equipment equipment = Equipment.builder()
-//                  .name("trax")
-//                  .id(1L)
-//                  .Quantity(44)
-//                  .build();
-//          Equipment savedEquipment = equipmentService.addEquipment(equipment);
+    @PostMapping("/addEquipment")
+    public ResponseEntity<Equipment> add() {
+     try {
+         Equipment equipment = Equipment.builder()
+                 .name("trax")
+                 .id(1L)
+                 .Quantity(44)
+                 .build();
+         Equipment savedEquipment = equipmentService.addEquipment(equipment);
 
-//          return ResponseEntity.ok(savedEquipment);
+         return ResponseEntity.ok(savedEquipment);
 
-//      }catch (Exception e) {
-//          System.out.println(e);
+     }catch (Exception e) {
+         System.out.println(e);
 
-//          return null;
-//      }
-//        Widget testWidget = Widget.builder()
-//                .name("foo")
-//                .id(1)
-//                .build();
-//     }
+         return null;
+     }
+       Widget testWidget = Widget.builder()
+               .name("foo")
+               .id(1)
+               .build();
+    }
 }
