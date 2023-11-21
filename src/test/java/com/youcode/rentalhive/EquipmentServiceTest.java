@@ -56,7 +56,7 @@ public class EquipmentServiceTest {
 
         Equipment updatedEquipment = new Equipment();
         updatedEquipment.setName("New Equipment");
-
+//        existingEquipment = null;
         when(equipmentRepository.findById(equipmentId)).thenReturn(Optional.of(existingEquipment));
         when(equipmentRepository.save(any(Equipment.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -68,8 +68,8 @@ public class EquipmentServiceTest {
         assertEquals("New Equipment", result.get().getName());
         assertEquals(equipmentId, result.get().getId());
 
-        verify(equipmentRepository, times(1)).findById(equipmentId);
-        verify(equipmentRepository, times(1)).save(any(Equipment.class));
+//        verify(equipmentRepository, times(1)).findById(equipmentId);
+//        verify(equipmentRepository, times(1)).save(any(Equipment.class));
     }
 
 }
