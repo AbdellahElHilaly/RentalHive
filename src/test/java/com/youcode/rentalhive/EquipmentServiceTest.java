@@ -45,4 +45,31 @@ public class EquipmentServiceTest {
 
         verify(equipmentRepository, times(1)).save(any(Equipment.class)); // Verify that repository.save() was called once
     }
+
+    @Test
+    public void testUpdateEquipment_ValidIdAndName_ShouldReturnUpdatedEquipment() {
+        // Arrange
+        long equipmentId = 1L;
+        Equipment existingEquipment = new Equipment();
+        existingEquipment.setId(equipmentId);
+        existingEquipment.setName("Old Equipment");
+
+        Equipment updatedEquipment = new Equipment();
+        updatedEquipment.setName("New Equipment");
+//        existingEquipment = null;
+        when(equipmentRepository.findById(equipmentId)).thenReturn(Optional.of(existingEquipment));
+        when(equipmentRepository.save(any(Equipment.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Optional<Equipment> result = equipmentService.updateEquipment(equipmentId, updatedEquipment);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals("New Equipment", result.get().getName());
+        assertEquals(equipmentId, result.get().getId());
+
+//        verify(equipmentRepository, times(1)).findById(equipmentId);
+//        verify(equipmentRepository, times(1)).save(any(Equipment.class));
+    }
+
 }
