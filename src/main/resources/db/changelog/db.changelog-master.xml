@@ -9,5 +9,4 @@
     <include file="db/changelog/migrations/create_users_table.xml"/>
     <include file="db/changelog/migrations/updated_users_table.xml"/>
 
-
 </databaseChangeLog>
